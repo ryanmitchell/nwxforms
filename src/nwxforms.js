@@ -391,6 +391,7 @@ function nwxforms(global, opts) {
 	},
 
 	addClass = function(element, className) {
+		className = (opts.prefix ? opts.prefix : '') + className;
 		if (!hasClass(element, className)) {
 			element.className = element.className.length ? (element.className + ' ' + className) : className;
 		}
@@ -398,6 +399,7 @@ function nwxforms(global, opts) {
 	},
 
 	removeClass = function(element, className) {
+		className = (opts.prefix ? opts.prefix : '') + className;
 		if (hasClass(element, className)) {
 			element.className = element.className.replace(RegExp('(?:^|\\s)' + className + '(\\s|$)'), '$1');
 		}
