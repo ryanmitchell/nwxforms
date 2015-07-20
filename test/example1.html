@@ -35,7 +35,7 @@ values and prevent form submission in case the control value is absent.</p>
 the control values in a default way while it uses the <code>required</code>
 attribute to avoid submitting the form when the control value is empty.</p>
 
-<form action="?" onsubmit="this.action='?'+Date.now()" method="post">
+<form action="?" onsubmit="this.action='?'+(new Date).getTime()" method="post">
 
     <div><label for="name">name</label></div>
     <div><input name="name" id="name" type="text" placeholder="Enter your name" autofocus="" required="" title="Your name"> *</div>
@@ -63,6 +63,9 @@ attribute to avoid submitting the form when the control value is empty.</p>
 
     <div><label for="interests">interests</label></div>
     <div><input name="interests" id="interests" type="text" placeholder="List your interests" title="Tell us more about your interests"></div>
+
+     <div><label for="agree">agree</label></div>
+     <div><input name="agree" id="agree" type="checkbox" required="" title="Do you agree?"></div>
 
     <p><button type="submit" value="submit" title="Submit the form">submit </button></p>
 

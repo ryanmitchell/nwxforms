@@ -206,9 +206,9 @@ function nwxforms(global) {
 	// IE: prevent ESC+ESC (reset)
 	// erasing entered user data
 	reset = function(event) {
-		event[target].value = '';
-		event[target].focus();
-		return stop(event);
+		if (event.keyCode == 27) return stop(event);
+		else setTimeout(function() { toggle(true); }, 25);
+		return true;
 	},
 
 	// prevent event default action
@@ -399,14 +399,8 @@ function nwxforms(global) {
 		}
 		return element;
 	},
-	
-	hasNativeSupport = function(type){
-	    var input = document.createElement("input");
-	    input.setAttribute("type", type);
-	    return input.type == type;
-	};
 
-	(function toggle(event) {
+	toggle = function(event) {
 
 		var i, j, k, autofocus,
 			element, field, invalid,
@@ -437,6 +431,11 @@ function nwxforms(global) {
 						invalid = true;
 						break;
 					}
+					if (element.type == 'checkbox' && element.attributes['required']) {
+						if (element.checked) continue;
+						invalid = true;
+						break;
+					}
 				}
 				if (element.attributes['required'] && (element.value === '' || element.getAttribute('placeholder') == element.value)) {
 					if ('selectedIndex' in element && (k = element.selectedIndex) > -1) {
@@ -444,7 +443,7 @@ function nwxforms(global) {
 						if (element.value !== '' || (k > 0 && element.options[k].text !== '')) {
 							continue;
 						}
-					}
+					} else if (element.type == 'checkbox' && element.checked) continue;
 					invalid = true;
 					break;
 				}
@@ -475,39 +474,32 @@ function nwxforms(global) {
 
 				if (name == 'input') {
 					if (!element.getAttribute('data-regexp')) {
-						
-						if (!hasNativeSupport(element.getAttribute('type'))){
-
-							switch(element.getAttribute('type')) {
-								case 'color':
-									element.setAttribute('data-regexp', '[-\w#]');
-									break;
-								case 'number':
-									element.setAttribute('data-regexp', '[-+.0-9e]');
-									break;
-								case 'week':
-									element.setAttribute('data-regexp', '[-.\\/ 0-9W]');
-									break;
-								case 'date':
-								case 'time':
-								case 'month':
-								case 'datetime':
-								case 'datetime-local':
-									element.setAttribute('data-regexp', '[-.\\/ 0-9]');
-									break;
-								default:
-									break;
-							}
-						
+						switch(element.getAttribute('type')) {
+							case 'color':
+								element.setAttribute('data-regexp', '[-\w#]');
+								break;
+							case 'number':
+								element.setAttribute('data-regexp', '[-+.0-9e]');
+								break;
+							case 'week':
+								element.setAttribute('data-regexp', '[-.\\/ 0-9W]');
+								break;
+							case 'date':
+							case 'time':
+							case 'month':
+							case 'datetime':
+							case 'datetime-local':
+								element.setAttribute('data-regexp', '[-.\\/ 0-9]');
+								break;
+							default:
+								break;
 						}
 					}
 
 					if (!element.getAttribute('pattern')) {
-						if (!hasNativeSupport(element.getAttribute('type'))){
-							if ((type = element.getAttribute('type')) && TYPES_RE[type]) {
-								addClass(element, type);
-								element.setAttribute('pattern', '^(?:' + TYPES_RE[type] + ')$');
-							}
+						if ((type = element.getAttribute('type')) && TYPES_RE[type]) {
+							addClass(element, type);
+							element.setAttribute('pattern', '^(?:' + TYPES_RE[type] + ')$');
 						}
 					}
 				}
@@ -632,6 +624,8 @@ function nwxforms(global) {
 
 		return;
 
-	})(true);
+	};
 
+	// init wrappers on form controls
+	toggle(true);
 }
