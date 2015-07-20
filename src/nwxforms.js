@@ -415,9 +415,13 @@ function nwxforms(global, opts) {
 		// handle the submit event invocation
 		// and aborts in case validation fail
 		if (event && event.type == 'submit') {
+			
 			invalid = false;
+			
 			for (j = 0; event[target].elements.length > j; ++j) {
+				
 				element = event[target].elements[j];
+				
 				// needed for ENTER key submits to avoid bfcache
 				// remembering the focused status of the element
 				removeClass(element, 'focused');
@@ -443,6 +447,9 @@ function nwxforms(global, opts) {
 						break;
 					}
 				}
+				
+				// remove required class if already exists
+				removeClass(element, 'required');
 				if (element.attributes['required'] && (element.value === '' || element.getAttribute('placeholder') == element.value)) {
 					if ('selectedIndex' in element && (k = element.selectedIndex) > -1) {
 						// expectation here is for a value or at least index > 0 and valid text
@@ -453,13 +460,16 @@ function nwxforms(global, opts) {
 					invalid = true;
 					break;
 				}
+				
 			}
+			
 			if (invalid) {
 				addClass(element, 'focused');
 				setfocus(element);
 				stop(event);
 				return;
 			}
+			
 		}
 
 		// handle both initial setup and the
