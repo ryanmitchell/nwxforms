@@ -56,11 +56,15 @@ OTHER DEALINGS IN THE SOFTWARE.
 // @global - required browsing context
 //
 
-function nwxforms(global) {
+function nwxforms(global, opts) {
 
 	var cache = { },
+	
+	opts = opts || {},
 
 	doc = global.document,
+	
+	root = opts.root || doc,
 
 	// helper strings for event shortcut
 	w3c = !!doc.addEventListener,
@@ -181,10 +185,10 @@ function nwxforms(global) {
 
 	// collection of page forms and elements
 	elements = {
-		'form': doc.getElementsByTagName('form'),
-		'input': doc.getElementsByTagName('input'),
-		'select': doc.getElementsByTagName('select'),
-		'textarea': doc.getElementsByTagName('textarea')
+		'form': root.getElementsByTagName('form'),
+		'input': root.getElementsByTagName('input'),
+		'select': root.getElementsByTagName('select'),
+		'textarea': root.getElementsByTagName('textarea')
 	},
 
 	// element may be hidden or not displayed
